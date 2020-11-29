@@ -1,6 +1,10 @@
+const fs = require("fs");
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+
+// Load in the config settings
+const config = JSON.parse(fs.readFileSync("./config/config.json"));
 
 app.commandLine.appendSwitch("ignore-certificate-errors", "true");
 
@@ -16,16 +20,17 @@ app.on('ready', function() {
   mainWindow = new BrowserWindow({
   webPreferences: {
     webSecurity: false
-  }
+  },
+  titleBarStyle: "hiddenInset"
   });
 
   mainWindow.maximize();
 
   mainWindow.removeMenu();
 
-  mainWindow.loadURL("https://192.168.1.12:5000/");
+  mainWindow.loadURL(`https://${config.ServerAddress}:${config.ServerPort}`);
 
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function() {
     mainWindow = null;
